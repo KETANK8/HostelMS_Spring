@@ -39,4 +39,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	@Query(value = "update User set user_contact =: contactNo where user_id =: userId")
 	int updateUserContact(int userId, String contactNo);
 
+	User findByUserName(String username);
+
 }

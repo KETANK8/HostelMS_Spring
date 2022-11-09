@@ -16,12 +16,16 @@ package com.hostelms.controller;
 
 import com.hostelms.exception.GlobalException;
 import com.hostelms.model.User;
+import com.hostelms.model.login;
 import com.hostelms.modeldto.UserDTO;
 import com.hostelms.service.UserService;
+import com.hostelms.util.JwtUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,6 +40,21 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	AuthenticationManager authManager;
+
+	@Autowired
+	JwtUtil jwt;
+
+	// LOGIN REQUEST
+	@PostMapping("/login")
+	public String generateToken(@RequestBody login log) {
+
+		authManager.authenticate(new UsernamePasswordAuthenticationToken(log.getUserName(), log.getUserPassword()));
+		return jwt.generateToken(log.getUserName());
+
+	}
 
 	// MAPPING METHOD 1
 	// TO HANDLE REQUEST TO LOGIN USING USERNAME AND PASSWORD
